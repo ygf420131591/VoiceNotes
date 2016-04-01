@@ -2,9 +2,15 @@ package com.voicenotes.fragment;
 
 import java.io.IOException;
 
+import com.voicenotes.manages.MediaDecoder;
+import com.voicenotes.manages.MyGLSurfaceView;
+import com.voicenotes.manages.VideoCapture;
 import com.voicenotes.views.R;
 import android.support.v4.app.Fragment;
+import android.graphics.ImageFormat;
 import android.hardware.Camera;
+import android.hardware.Camera.PreviewCallback;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -13,6 +19,8 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 
 /**
@@ -21,11 +29,13 @@ import android.view.ViewGroup;
  */
 public class VideoFragment extends Fragment implements Callback{
 	
-	private Camera mCamera = null; 
 	private SurfaceView mSurfaceView = null;
 	private SurfaceHolder mSurfaceHolder = null;
 	
-	
+	private GLSurfaceView mGlSurfaceView = null;
+	private RelativeLayout mRemoteRelativeLayout;
+	private VideoCapture videoCapture;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -36,29 +46,14 @@ public class VideoFragment extends Fragment implements Callback{
 		mSurfaceHolder = mSurfaceView.getHolder();
 		mSurfaceHolder.addCallback((Callback) this);
 		
+		mRemoteRelativeLayout = (RelativeLayout) view.findViewById(R.id.remoteRelativeLayout);
+		mGlSurfaceView = new MyGLSurfaceView(this.getActivity());
+//		mGlSurfaceView.setEGLContextClientVersion(2);
+		mRemoteRelativeLayout.addView(mGlSurfaceView);
+		
+		videoCapture = new VideoCapture();
+		
 		return view;
-	}
-
-
-	private void initCamera() {
-		mCamera = Camera.open(1);
-		try {
-			mCamera.setPreviewDisplay(mSurfaceHolder);
-		} catch (IOException e) {
-			if (mCamera != null) {
-				mCamera.release();
-				mCamera = null;
-			}
-			e.printStackTrace();
-		}
-		if (mCamera != null) {
-			Camera.Parameters parameters = mCamera.getParameters();
-			parameters.setPreviewSize(640, 480);
-			mCamera.setParameters(parameters);
-			
-			mCamera.setDisplayOrientation(90);
-			mCamera.startPreview();
-		}
 	}
 	
 	@Override
@@ -72,7 +67,7 @@ public class VideoFragment extends Fragment implements Callback{
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		// TODO Auto-generated method stub
-		initCamera();
+		videoCapture.initCamera(mSurfaceHolder);
 	}
 
 
