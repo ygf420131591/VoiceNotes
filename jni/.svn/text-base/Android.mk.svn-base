@@ -1,0 +1,55 @@
+# Copyright (C) 2009 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+#
+# JNI
+#
+LOCAL_PATH := $(call my-dir)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE    := Log
+
+#头文件路径声明
+LOCAL_C_INCLUDES += ../../../../include
+LOCAL_C_INCLUDES += ../../src
+LOCAL_C_INCLUDES += ../../src/include
+
+#源文件路径声明
+LOCAL_SRC_ROOT = ../../src
+LOCAL_SRC_DIR += .
+LOCAL_SRC_DIR += ./android
+
+#查找cpp源文件
+LOCAL_SRC_PATH := $(patsubst %, $(LOCAL_SRC_ROOT)/%, ${LOCAL_SRC_DIR})
+LOCAL_SRC_FILES := $(foreach dir, ${LOCAL_SRC_PATH}, $(wildcard $(dir)/*.cpp))
+
+LOCAL_LDFLAGS   += -L../../../../android_lib
+LOCAL_LDFLAGS   += -L../../../../android_lib/playsdk/armeabi
+LOCAL_LDFLAGS   += -L../../../../android_lib/netsdk/armeabi
+LOCAL_LDFLAGS   += -L../../../../android_lib/streamsvr
+LOCAL_LDFLAGS   += -L../../../../android_lib/DHCloud
+LOCAL_LDFLAGS   += -L../../../../android_lib/common
+LOCAL_LDFLAGS   += -L../../../../android_lib/component
+
+LOCAL_LDLIBS	:= -L$(SYSROOT)/usr/lib -llog
+
+LOCAL_SHARED_LIBRARIES := -lstdc++ -lstlport
+
+LOCAL_STATIC_LIBRARIES += libc
+
+LOCAL_CPPFLAGS         += -g -Wall
+LOCAL_CFLAGS           += -g -Wall
+
+include $(BUILD_SHARED_LIBRARY)

@@ -1,0 +1,9 @@
+K 16
+tsvn:logtemplate
+V 120
+类型（新增/bug）：新增功能
+描述：功能描述信息
+影响功能模块： 
+提交人：XXX
+评审人：XXX
+END
