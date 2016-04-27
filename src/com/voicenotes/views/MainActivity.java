@@ -1,65 +1,83 @@
 package com.voicenotes.views;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.voicenotes.fragment.MyFragment;
 import com.voicenotes.fragment.VideoFragment;
 import com.voicenotes.fragment.VoiceFragment;
+import com.voicenotes.views.utils.NavTabButton;
+import com.voicenotes.views.utils.TopBarView;
+import com.voicenotes.views.utils.TopBarView.onClickButtonLister;
 
-import android.R.anim;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TabHost.TabSpec;
-import android.widget.TextView;
+import android.widget.TabHost.TabSpec;;
 
-public class MainActivity extends FragmentActivity{
+public class MainActivity extends FragmentActivity {
 	
 	private FragmentTabHost mTabHost;
-	private LayoutInflater mLayoutInflater;
-	private Class mFragmentArray[] = {VideoFragment.class, VoiceFragment.class};
-	private String mTextArray[] = {"Video", "Voice"};
-	private int mImageArray[] = {R.drawable.common_tab_my_s, R.drawable.common_tab_record_s};
+	private TopBarView mTopBarView;
 	
+	private NavTabButton[] navButton; 
+	private Class mFragmentArray[] = {VideoFragment.class, VoiceFragment.class, MyFragment.class};
+	private String mTextArray[] = {"Video", "Voice", "My"};
+	private int mImageArray_s[] = {R.drawable.common_tab_schedule_s, R.drawable.common_tab_record_s, R.drawable.common_tab_my_s};
+	private int[] mImageArray_n = {R.drawable.common_tab_schedule_n, R.drawable.common_tab_record_n, R.drawable.common_tab_my_n};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		initView();
 	}
 	
-	
 	private void initView() {
-		mLayoutInflater = LayoutInflater.from(this);
+		
+		mTopBarView = (TopBarView) findViewById(R.id.TabBarView);
+		mTopBarView.setTitleText(mTextArray[0]);
 		
 		mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 		
 		int count = mFragmentArray.length;
+		navButton = new NavTabButton[count];
 		for (int i = 0; i < count; i++) {
-			TabSpec tabSpec = mTabHost.newTabSpec(mTextArray[i]).setIndicator(getTabItemView(i));
-			
+			navButton[i] = new NavTabButton(this, i);
+			navButton[i].setTitle(mTextArray[i]);
+			if (i == 0) {
+				navButton[i].setImageView(mImageArray_s[i]);
+			} else {
+				navButton[i].setImageView(mImageArray_n[i]);
+			}
+			TabSpec tabSpec = mTabHost.newTabSpec(mTextArray[i]).setIndicator(navButton[i]);
 			mTabHost.addTab(tabSpec, mFragmentArray[i], null);
 		}
 	}
 	
-	private View getTabItemView(int index) {
-		View view = mLayoutInflater.inflate(R.layout.tab_item_view, null);
-
-		ImageView imageView = (ImageView) view.findViewById(R.id.imageview);
-		imageView.setImageResource(mImageArray[index]);
+	public void setSelectedIndicator(int index) {
+		mTabHost.setCurrentTab(index);			//切换到相应的tab;
+		mTopBarView.setTitleText(mTextArray[index]);  //重置顶部标题
+		if (index == 1) {
+			mTopBarView.setNextButton(true, new onClickButtonLister() {
+				
+				@Override
+				public void onClickButton() {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(MainActivity.this, VoiceRecordActivity.class);
+					startActivity(intent);
+				}
+			});
+		} else {
+			mTopBarView.setNextButton(false, null);
+		}
 		
-		TextView textView = (TextView) view.findViewById(R.id.textview);
-		textView.setText(mTextArray[index]);
-		
-		return view;
+		int count = mFragmentArray.length;
+		for (int i = 0; i < count; i++) {
+			navButton[i].setImageView(mImageArray_n[i]);
+		}
+		navButton[index].setImageView(mImageArray_s[index]);
 	}
 	
+
 }

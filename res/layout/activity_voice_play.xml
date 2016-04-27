@@ -1,0 +1,59 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <com.voicenotes.views.utils.TopBarView
+        android:id="@+id/TabBarViewPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TabBarViewPlay"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" >
+
+        <ImageButton
+            android:id="@+id/LastPlay"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:src="@android:drawable/ic_media_previous" />
+
+        <ImageButton
+            android:id="@+id/StartPlay"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:src="@android:drawable/ic_media_play" />
+
+        <ImageButton
+            android:id="@+id/NextPlay"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:src="@android:drawable/ic_media_next" />
+    </LinearLayout>
+
+    <SeekBar
+        android:id="@+id/seekBar1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayout1"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/ContentEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seekBar1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="88dp"
+        android:ems="10"
+        android:inputType="textPostalAddress" />
+
+</RelativeLayout>

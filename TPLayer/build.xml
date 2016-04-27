@@ -1,0 +1,90 @@
+﻿<project name="TPLayer" default="release">
+	<!--ANT环境变量-->
+	<property environment="env"/>
+	
+	<!--应用名称-->
+	<property name="appName" value="${ant.project.name}"/>
+	
+	<!--SDK目录（获取操作系统环境变量ANDROID_HOME的值）-->
+	<property name="sdk-folder" value="${env.ANDROID_HOME}"/>
+	
+	<!--SDK指定平台目录-->
+	<property name="sdk-platform-folder" value="${sdk-folder}/platforms/android-8"/>
+	
+	<!--SDK中tools目录-->
+	<property name="sdk-tools" value="${sdk-folder}/tools"/>
+	
+	<!--SDK指定平台中tools目录-->
+	<property name="sdk-platform-tools" value="${sdk-platform-folder}/tools"/>
+	
+	<!--SDK中编译工具目录-->
+	<property name="build-tools-folder" value="${sdk-folder}/build-tools/android-4.4"/>
+	
+	<!--编译中使用到的命令-->
+	<property name="aapt" value="${build-tools-folder}/aapt"/>
+	<property name="aidl" value="${build-tools-folder}/aidl"/>
+	<property name="dx" value="${build-tools-folder}/dx.bat"/>
+	<property name="jar" value="${env.JAVA_HOME}/bin/jar"/>
+	
+	<!--编译需要的jar-->
+	<property name="android-jar" value="${sdk-platform-folder}/android.jar"/>
+	
+	<!--生成R文件的相对目录-->
+	<property name="outdir-gen" value="gen"/>
+	
+	<!--编译后的文件放置目录-->
+	<property name="outdir-bin" value="bin"/>
+	
+	<!--打包结果放置的目录-->
+	<property name="out-jar-package" value="${outdir-bin}/${appName}.jar"/>
+	<property name="out-jar-package-ospath" value="${basedir}/${out-jar-package}"/>
+	
+	<!--清单文件-->
+	<property name="manifest-xml" value="AndroidManifest.xml"/>
+	
+	<!--java源文件目录-->
+	<property name="srcdir" value="src"/>
+	<property name="srcdir-ospath" value="${basedir}/${srcdir}"/>
+	
+	<!--外部类库所在目录-->
+	<property name="external-lib" value="libs"/>
+	<property name="external-lib-ospath" value="${basedir}/${external-lib}"/>
+	
+	<!--生成class目录-->
+	<property name="outdir-classes" value="${outdir-bin}/classes"/>
+	<property name="outdir-classes-ospath" value="${basedir}/${outdir-classes}"/>
+	
+	<!--初始化工作-->
+	<target name="init">
+		<echo>Initializing all output directories...</echo>
+		<delete dir="${outdir-bin}"/>
+		<delete dir="${outdir-gen}"/>
+		<mkdir dir="${outdir-bin}"/>
+		<mkdir dir="${outdir-gen}"/>
+		<mkdir dir="${outdir-classes}"/>
+	</target>
+	
+	<!--将工程中的java源文件编译成class文件-->
+	<target name="compile" depends="init">   
+		<echo>Compiling java source code...</echo>
+		<javac encoding="gbk" target="1.6" srcdir="." destdir="${outdir-classes}" bootclasspath="${android-jar}"/>                                    
+	</target>
+	
+	<!--打包成jar-->
+	<target name="package-classes" depends="compile">
+		<echo>Packaging classes...</echo>
+		<exec executable="${jar}" failonerror="true">
+			<arg value="cvf"/>
+			<arg value="${out-jar-package-ospath}"/>
+			<arg value="-C"/>
+			<arg value="${outdir-classes-ospath}/"/>
+			<arg value="."/>
+		</exec>
+	</target>                                  
+	                                                  
+	<!--发布-->
+	<target name="release" depends="package-classes">
+		<!--删除未签名的apk-->
+		<echo>jar is release. path:${out-jar-package-ospath}</echo>
+	</target>
+</project>

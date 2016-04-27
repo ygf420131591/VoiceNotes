@@ -4,5 +4,11 @@
     <string name="app_name">VoiceNotes</string>
     <string name="hello_world">Hello world!</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_voice_play">VoicePlayActivity</string>
+    <string name="title_activity_voice_record">VoiceRecordActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_scan_qrcode">ScanQRCodeActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_create_qrcode">CreateQRCodeActivity</string>
 
 </resources>

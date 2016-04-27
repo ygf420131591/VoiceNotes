@@ -1,9 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
+<?xml version="1.0" encoding="utf-8"?>	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
   android:orientation="vertical" >
 
+  <com.voicenotes.views.utils.TopBarView
+      android:id="@+id/TabBarView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="0dp"
+      android:layout_marginLeft="0dp" />
+    
+  
   <FrameLayout
     android:id="@+id/realtabcontent"
     android:layout_width="fill_parent"
@@ -20,6 +27,8 @@
       android:layout_width="0dp"
       android:layout_height="0dp"
       android:layout_weight="0" />			
-  </android.support.v4.app.FragmentTabHost>
+  </android.support.v4.app.FragmentTabHost> 
+
+
 
 </LinearLayout>

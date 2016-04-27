@@ -1,25 +1,18 @@
 package com.voicenotes.fragment;
 
-import java.io.IOException;
 
-import com.voicenotes.manages.MediaDecoder;
-import com.voicenotes.manages.MyGLSurfaceView;
+import com.voicenotes.manages.OpenGLRenderer;
 import com.voicenotes.manages.VideoCapture;
 import com.voicenotes.views.R;
 import android.support.v4.app.Fragment;
-import android.graphics.ImageFormat;
-import android.hardware.Camera;
-import android.hardware.Camera.PreviewCallback;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 
@@ -33,6 +26,7 @@ public class VideoFragment extends Fragment implements Callback{
 	private SurfaceHolder mSurfaceHolder = null;
 	
 	private GLSurfaceView mGlSurfaceView = null;
+	private OpenGLRenderer mOpenGLRenderer;
 	private RelativeLayout mRemoteRelativeLayout;
 	private VideoCapture videoCapture;
 
@@ -47,11 +41,14 @@ public class VideoFragment extends Fragment implements Callback{
 		mSurfaceHolder.addCallback((Callback) this);
 		
 		mRemoteRelativeLayout = (RelativeLayout) view.findViewById(R.id.remoteRelativeLayout);
-		mGlSurfaceView = new MyGLSurfaceView(this.getActivity());
-//		mGlSurfaceView.setEGLContextClientVersion(2);
+		mGlSurfaceView = new GLSurfaceView(this.getActivity());
+		mOpenGLRenderer = new OpenGLRenderer(mGlSurfaceView);
+		mGlSurfaceView.setEGLContextClientVersion(2);
+		mGlSurfaceView.setRenderer(mOpenGLRenderer);
+//		mGlSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 		mRemoteRelativeLayout.addView(mGlSurfaceView);
 		
-		videoCapture = new VideoCapture();
+		videoCapture = new VideoCapture(mOpenGLRenderer);
 		
 		return view;
 	}

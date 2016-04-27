@@ -7,14 +7,14 @@ import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.util.Log;
 
-public class MediaEncoder {
+public class MediaH264Encoder {
 
 	private MediaCodec mMediaEncoder;
 	private int mWidth;
 	private int mHeight;
 	private long mFrameCount;
 	
-	public byte[] outBuffer = new byte[1000000];
+	public byte[] outBuffer;
 	public int length;
 	
 	public void initMediaEncoder(int width, int heigth) {
@@ -22,10 +22,13 @@ public class MediaEncoder {
 		mHeight = heigth;
 		mFrameCount = 0;
 		
-		mMediaEncoder = MediaCodec.createByCodecName("OMX.qcom.video.encoder.avc");
+		outBuffer = new byte[100000];
+		
+		mMediaEncoder = MediaCodec.createEncoderByType("video/avc");
+//		mMediaEncoder = MediaCodec.createByCodecName("OMX.qcom.video.encoder.avc");
 		MediaFormat mediaFormat = MediaFormat.createVideoFormat("video/avc", width, heigth);
-		mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 2);
-		mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, 512 * 1024);
+		mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1);
+		mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, 1024 * 1024);
 		mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar);
 		mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, 10);	
 		mMediaEncoder.configure(mediaFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
@@ -34,14 +37,14 @@ public class MediaEncoder {
 
 	
 	public int encoder(byte[] buffer) {
-		swapNV21toNV12(buffer);
+//		swapNV21toNV12(buffer);
 		ByteBuffer[] inputBuffers = mMediaEncoder.getInputBuffers();
 		ByteBuffer[] outputBuffers = mMediaEncoder.getOutputBuffers();
 		int inputBufferIndex = mMediaEncoder.dequeueInputBuffer(0);
 		if (inputBufferIndex >= 0) {
 			ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
 			inputBuffer.clear();
-			inputBuffer.put(buffer);
+//			inputBuffer.put;
 			long presentationTimeUs = 1000000L * mFrameCount / 30;
 			mMediaEncoder.queueInputBuffer(inputBufferIndex, 0, buffer.length, presentationTimeUs, 0);
 			mFrameCount ++;
@@ -82,14 +85,14 @@ public class MediaEncoder {
 		return -1;
 	}
 	
-	private void swapNV21toNV12(byte[] bytes) {
-		int uv_offset = mHeight * mWidth;
-		int u_size = mHeight * mHeight / 4;
-		for (int i = 0; i < u_size; i++) {
-			byte temp;
-			temp = bytes[uv_offset + i * 2];
-			bytes[uv_offset + i * 2] = bytes[uv_offset + i * 2 + 1];
-			bytes[uv_offset+i*2+1] = temp;
-		}
-	}
+//	private void swapNV21toNV12(byte[] bytes) {
+//		int uv_offset = mHeight * mWidth;
+//		int u_size = mHeight * mHeight / 4;
+//		for (int i = 0; i < u_size; i++) {
+//			byte temp;
+//			temp = bytes[uv_offset + i * 2];
+//			bytes[uv_offset + i * 2] = bytes[uv_offset + i * 2 + 1];
+//			bytes[uv_offset+i*2+1] = temp;
+//		}
+//	}
 }
